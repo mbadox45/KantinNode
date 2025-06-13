@@ -14,10 +14,17 @@ exports.tapAbsen = async (req, res) => {
     });
 
     if (!kartu || !kartu.user_kantin) {
-      return res.status(404).json({ code: 400, status: false, message: 'Kartu tidak valid atau tidak terdaftar.' });
+      return res.status(404).json({ code: 400, status: false, message: 'Kartu tidak valid atau tidak terdaftar.', data:null });
     }
 
     const userKantin = kartu.user_kantin;
+
+    const dataUser = {
+      nama: userKantin.nama,
+      bagian: userKantin.bagian,
+      nrk: userKantin.nrk,
+      waktu: moment(new Date()).format('HH:mm:ss'),
+    }
 
     // 2. Cek apakah hari ini termasuk Ramadhan
     const periodeRamadhan = await Ramadhan.findOne({
@@ -68,7 +75,7 @@ exports.tapAbsen = async (req, res) => {
     }
 
     if (!sesiAktif) {
-      return res.status(400).json({ code: 400, status: false, message: 'Tidak ada sesi makan aktif saat ini.' });
+      return res.status(400).json({ code: 400, status: false, data: dataUser, message: 'Tidak ada sesi makan aktif saat ini.' });
     }
 
     // 4. Cek shift user hari ini
@@ -81,7 +88,7 @@ exports.tapAbsen = async (req, res) => {
     });
 
     if (!jadwalShift || !jadwalShift.length) {
-      return res.status(400).json({ code: 400, status: false, message: 'User tidak memiliki jadwal shift hari ini.' });
+      return res.status(400).json({ code: 400, status: false, data: dataUser, message: 'User tidak memiliki jadwal shift hari ini.' });
     }
 
     const shiftAktif = jadwalShift[0].shift;
@@ -96,7 +103,7 @@ exports.tapAbsen = async (req, res) => {
     });
 
     if (sudahAbsen) {
-      return res.status(400).json({ code: 400, status: false, message: 'Sudah tapping pada sesi ini.' });
+      return res.status(400).json({ code: 400, status: false, data: dataUser, message: 'Sudah tapping pada sesi ini.' });
     }
 
     // 6. Simpan absen
@@ -131,11 +138,11 @@ exports.tapAbsen = async (req, res) => {
       absen
     });
 
-    return res.status(201).json({ code: 201, status: true, message: 'Absen berhasil', absen });
+    return res.status(201).json({ code: 201, status: true, data: dataUser, message: 'Absen berhasil', absen });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ code: 500, status: false, message: 'Terjadi kesalahan', detail: error.message });
+    res.status(500).json({ code: 500, status: false, data:null, message: 'Terjadi kesalahan', detail: error.message });
   }
 };
 
