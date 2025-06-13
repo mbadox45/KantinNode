@@ -15,6 +15,7 @@ const masterKartuRoutes = require('./routes/masterKartuRoutes');
 const masterWaktuMakanRoutes = require('./routes/masterWaktuMakanRoutes');
 const ramadhanRoutes = require('./routes/ramadhanRoutes');
 const userKantinRoutes = require('./routes/userKantinRoutes');
+const jadwalKerjaKantinRoutes = require('./routes/jadwalKerjaKantinRoutes');
 const visitorRoutes = require('./routes/visitorRoutes');
 const userRoutes = require('./routes/userRoutes');
 
@@ -68,6 +69,7 @@ app.use('/v1/master-shift', masterShiftRoutes);
 app.use('/v1/master-kartu', masterKartuRoutes);
 app.use('/v1/master-ramadhan', ramadhanRoutes);
 app.use('/v1/master-waktu-makan', masterWaktuMakanRoutes);
+app.use('/v1/shift-karyawan', jadwalKerjaKantinRoutes);
 app.use('/v1/user-kantin', userKantinRoutes);
 app.use('/v1/visitor', visitorRoutes);
 app.use('/v1/auth', userRoutes);
